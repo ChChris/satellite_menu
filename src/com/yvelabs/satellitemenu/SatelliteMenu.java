@@ -3,14 +3,17 @@ package com.yvelabs.satellitemenu;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.yvelabs.satellitemenu.utils.ImageUtils;
@@ -22,59 +25,50 @@ import com.yvelabs.satellitemenu.utils.MyMathUtils;
  * @author Yve
  *
  */
-public class SatelliteMenu extends FrameLayout {
+public class SatelliteMenu extends RelativeLayout {
 	
-	private int originAngle;
-	private int endAngle;
-	private int satelliteDistance;
-
+	private int originAngle; //起始角度
+	private int endAngle; //终止角度
+	private int satelliteDistance; //卫星距离
+	
 	private ImageView planetMenu;
 	private AbstractAnimation menuAnimation;
 	private OnSatelliteClickedListener onSatelliteClickedListener;
-
 	private List<SatelliteItemModel> satelliteList = new ArrayList<SatelliteItemModel>();
 	private boolean launched = false;
 	private AtomicBoolean plusAnimationActive = new AtomicBoolean(false);
 	
-	public int getOriginAngle() {
-		return originAngle;
+
+	public void setPlanetImg(int planetImgResourceId) {
+		new ImageUtils().setImage(planetMenu, planetImgResourceId);
 	}
 
-	public void setOriginAngle(int originAngle) {
-		this.originAngle = originAngle;
+	public void setPlanetImg(Drawable planetImgDrawable) {
+		new ImageUtils().setImage(planetMenu, planetImgDrawable);
 	}
 
-	public int getEndAngle() {
-		return endAngle;
+	public void setPlanetImg(String planetImgAssetPath) {
+		try {
+			new ImageUtils().setImage(planetMenu.getContext(), planetMenu, planetImgAssetPath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-
-	public void setEndAngle(int endAngle) {
-		this.endAngle = endAngle;
-	}
-
-	public int getSatelliteDistance() {
-		return satelliteDistance;
-	}
-
-	public void setSatelliteDistance(int satelliteDistance) {
-		this.satelliteDistance = satelliteDistance;
-	}
+	
+	
 
 	public SatelliteMenu(Context context) {
 		super(context);
-
 		init(context);
 	}
 
 	public SatelliteMenu(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
 		init(context);
 	}
 
 	public SatelliteMenu(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-
 		init(context);
 	}
 	
@@ -100,18 +94,11 @@ public class SatelliteMenu extends FrameLayout {
 	 */
 	private void init(Context context) {
 		planetMenu = new ImageView(context);
-		try {
-			new ImageUtils().setImage(getContext(), planetMenu, "image/planet_menu.png");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-//		FrameLayout.LayoutParams planetlayoutPara = new FrameLayout.LayoutParams(0, 0);
-//		planetMenu.setLayoutParams(planetlayoutPara);
-		
-//		addView(planetMenu);
-		
-		//加载动画类
-		loadingAnimation(new DefaultAnimation());
+		setBackgroundColor(Color.rgb(255, 229, 145));
+		planetMenu.setBackgroundColor(Color.rgb(84, 78, 110));
+		RelativeLayout.LayoutParams planetlayoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		planetMenu.setScaleType(ScaleType.CENTER);
+		addView(planetMenu, planetlayoutPara);
 		
 		//点击星球监听
 		planetMenu.setOnClickListener(new View.OnClickListener() {
@@ -150,33 +137,25 @@ public class SatelliteMenu extends FrameLayout {
 	 * @param satelliteItemList
 	 * @throws Exception
 	 */
-	public void addSatelliteItem (List<SatelliteItemModel> satelliteList){
-		this.satelliteList = satelliteList;
+	private void addSatelliteItem (List<SatelliteItemModel> sateList){
 		this.removeView(planetMenu);
 		
-		//设置起点
-		
 		//设置终点
-		new MyMathUtils().calcFinalXY(satelliteList, originAngle, endAngle, satelliteDistance);
+		new MyMathUtils().calcStopXY(satelliteList, originAngle, endAngle, satelliteDistance); 
 		
-		//
 		for (final SatelliteItemModel itemModel : satelliteList) {
+			//view属性设置
 			ImageView itemView = new ImageView(getContext());
 			itemView.setTag(itemModel);
 			itemView.setVisibility(View.GONE);
-			itemView.setX(itemModel.getFinalX());
-			itemView.setY(itemModel.getFinalY());
+			itemView.setX(itemModel.getStopX()); //TODO sun ying setX
+			itemView.setY(itemModel.getStopY()); //TODO sun ying setY
 			itemView.setScaleType(ScaleType.CENTER);
+			RelativeLayout.LayoutParams satellitelayoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			
-			//
-			//itemModel.setFinalX(100 - 100);
-			//itemModel.setFinalY(100 - 100);
-			//itemModel.setOriginX(0 - 100);
-			//itemModel.setOriginY(0 - 100);
-			
-			itemModel.setOriginX(itemModel.getOriginX() - itemModel.getFinalX());
-			itemModel.setOriginY(itemModel.getOriginY() - itemModel.getFinalY());
-			
+			//设置Model属性
+			itemModel.setOriginX(Double.valueOf(Math.rint(planetMenu.getX())).intValue());
+			itemModel.setOriginY(Double.valueOf(Math.rint(planetMenu.getY())).intValue());
 			itemModel.setView(itemView);
 			
 			try {
@@ -212,7 +191,7 @@ public class SatelliteMenu extends FrameLayout {
 				}
 			});
 			
-			this.addView(itemView);
+			this.addView(itemView, satellitelayoutPara);
 		}
 		menuAnimation.setSatelliteList(satelliteList);
 		
@@ -220,25 +199,117 @@ public class SatelliteMenu extends FrameLayout {
 	}
 	
 	/**
-	 * 装载动画
-	 * @param animationModel
-	 */
-	public void loadingAnimation (AbstractAnimation menuAnimation) {
-		menuAnimation.init(satelliteList, this);
-		
-		this.menuAnimation = menuAnimation;
-	}
-	
-	/**
 	 * 设置layout 高宽
 	 */
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		//TODO sun ying 计算控件高, 宽
-		super.onMeasure(500, 500);
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		
-		setMeasuredDimension(500, 500);
+		//setMeasuredDimension(layoutWidth, layoutHeight);
+	}
+	
+	/**
+	 * 设置
+	 * @param settingPara
+	 * @throws Exception
+	 */
+	public void setting (SettingPara settingPara) throws Exception {
 		
+		this.endAngle = MyMathUtils.getAngle(settingPara.getEndAngle());
+		this.originAngle = MyMathUtils.getAngle(settingPara.getOriginAngle());
+		this.satelliteDistance = settingPara.getSatelliteDistance();
+		
+		
+		//装载动画
+		menuAnimation = settingPara.getMenuAnimation();
+		menuAnimation.init(satelliteList, this);
+		
+		//添加卫星
+		this.satelliteList.addAll(settingPara.getSatelliteList());
+		
+		//设置星球图标
+		if (settingPara.getPlanetImgResourceId() > 0) {
+			new ImageUtils().setImage(planetMenu, settingPara.getPlanetImgResourceId());
+		} else if (settingPara.getPlanetImgDrawable() != null) {
+			new ImageUtils().setImage(planetMenu, settingPara.getPlanetImgDrawable());
+		} else if (settingPara.getPlanetImgAssetPath() != null && settingPara.getPlanetImgAssetPath().length() > 0) {
+			new ImageUtils().setImage(getContext(), planetMenu, settingPara.getPlanetImgAssetPath());
+		}
+		
+		
+		Map<String, String> map = null;
+		int layoutWidth;
+		int layoutHeight;
+		try {
+			//int planetLenght = new ImageUtils().getLongestSide(getContext(), settingPara.getPlanetImgResourceId());
+			int satelliteLenght = new ImageUtils().getLongestImage(getContext(), satelliteList) * 2;
+			int radius = satelliteDistance + satelliteLenght;
+			
+			if (settingPara.getPlanetPosition() != null && settingPara.getPlanetPosition().length() > 0) {
+				map = new MyMathUtils().getWidthHeightByPosition(settingPara.getPlanetPosition(), radius);
+				layoutWidth = Integer.parseInt(map.get("WIDTH"));
+				layoutHeight = Integer.parseInt(map.get("HEIGHT"));
+			} else {
+				map = new MyMathUtils().getWidthHeightNPosition(originAngle, endAngle, radius);
+				layoutWidth = Integer.parseInt(map.get("WIDTH"));
+				layoutHeight = Integer.parseInt(map.get("HEIGHT"));
+				settingPara.setPlanetPosition(map.get("POSITION"));
+			}
+			
+			//设置layout 高, 宽
+			RelativeLayout.LayoutParams parentlayoutPara = (LayoutParams) getLayoutParams();
+			parentlayoutPara.width = layoutWidth ;
+			parentlayoutPara.height = layoutHeight;
+			setLayoutParams(parentlayoutPara);
+			
+			//设置星球位置
+			setViewPosition(settingPara.getPlanetPosition(), planetMenu);
+			
+			//设置卫星
+			addSatelliteItem(satelliteList);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void setViewPosition (String position, View view) throws Exception {
+		RelativeLayout.LayoutParams layoutPara = (LayoutParams) view.getLayoutParams();
+		if (layoutPara == null) {
+			layoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		}
+		
+		if (SettingPara.POSITION_TOP_LEFT.equals(position)) {
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		} else if (SettingPara.POSITION_TOP_RIGHT.equals(position)) {
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		} else if (SettingPara.POSITION_BOTTOM_LEFT.equals(position)) {
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+		} else if (SettingPara.POSITION_BOTTOM_RIGHT.equals(position)) {
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+		} else if (SettingPara.POSITION_TOP_CENTER.equals(position)) {
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			layoutPara.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		} else if (SettingPara.POSITION_BOTTOM_CENTER.equals(position)) {
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+			layoutPara.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		} else if (SettingPara.POSITION_LEFT_CENTER.equals(position)) {
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			layoutPara.addRule(RelativeLayout.CENTER_VERTICAL);
+		} else if (SettingPara.POSITION_RIGHT_CENTER.equals(position)) {
+			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			layoutPara.addRule(RelativeLayout.CENTER_VERTICAL);
+		} else if (SettingPara.POSITION_CENTER.equals(position)) {
+			layoutPara.addRule(RelativeLayout.CENTER_IN_PARENT);
+		} else {
+			throw new Exception ("(setViewPosition)there are no this planet position (" + position + ")") ;
+		}
+		
+		view.setLayoutParams(layoutPara);
 	}
 	
 }

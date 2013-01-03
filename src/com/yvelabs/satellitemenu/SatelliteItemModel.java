@@ -12,58 +12,33 @@ public class SatelliteItemModel {
 	private ImageView view;
 	private int originX;
 	private int originY;
-    private int finalX;
-    private int finalY;
-    private int relativeX;
-    private int relativeY;
+    private int stopX;
+    private int stopY;
     
-    public int getRelativeX() {
-		return relativeX;
-	}
-
-	public void setRelativeX(int relativeX) {
-		this.relativeX = relativeX;
-	}
-
-	public int getRelativeY() {
-		return relativeY;
-	}
-
-	public void setRelativeY(int relativeY) {
-		this.relativeY = relativeY;
-	}
-
 	public int getOriginX() {
 		return originX;
 	}
-
 	public void setOriginX(int originX) {
 		this.originX = originX;
 	}
-
 	public int getOriginY() {
 		return originY;
 	}
-
 	public void setOriginY(int originY) {
 		this.originY = originY;
 	}
-
 	public SatelliteItemModel (int id, int imgResourceId) {
     	this.id = id;
     	this.imgResourceId = imgResourceId;
     }
-    
 	public SatelliteItemModel (int id, Drawable imgDrawable) {
 		this.id = id;
 		this.imgDrawable = imgDrawable;
 	}
-	
 	public SatelliteItemModel (int id, String imgAssetPath) {
 		this.id = id;
 		this.imgAssetPath = imgAssetPath;
 	}
-    
 	public int getId() {
 		return id;
 	}
@@ -88,24 +63,23 @@ public class SatelliteItemModel {
 	public void setView(ImageView view) {
 		this.view = view;
 	}
-	public int getFinalX() {
-		return finalX;
-	}
-	public void setFinalX(int finalX) {
-		this.finalX = finalX;
-	}
-	public int getFinalY() {
-		return finalY;
-	}
-	public void setFinalY(int finalY) {
-		this.finalY = finalY;
-	}
-	
 	public String getImgAssetPath() {
 		return imgAssetPath;
 	}
 	public void setImgAssetPath(String imgAssetPath) {
 		this.imgAssetPath = imgAssetPath;
+	}
+	public int getStopX() {
+		return stopX;
+	}
+	public void setStopX(int stopX) {
+		this.stopX = stopX;
+	}
+	public int getStopY() {
+		return stopY;
+	}
+	public void setStopY(int stopY) {
+		this.stopY = stopY;
 	}
 
 }

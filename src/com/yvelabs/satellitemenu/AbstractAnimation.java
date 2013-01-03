@@ -6,6 +6,7 @@ import java.util.List;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 public abstract class AbstractAnimation {
 	
@@ -15,13 +16,13 @@ public abstract class AbstractAnimation {
 		this.satelliteList = satelliteList;
 	}
 
-	private FrameLayout parentLayout;
+	private RelativeLayout parentLayout;
 	
-	public FrameLayout getParentLayout() {
+	public RelativeLayout getParentLayout() {
 		return parentLayout;
 	}
 
-	public void setParentLayout(FrameLayout parentLayout) {
+	public void setParentLayout(RelativeLayout parentLayout) {
 		this.parentLayout = parentLayout;
 	}
 
@@ -29,7 +30,7 @@ public abstract class AbstractAnimation {
 		return satelliteList;
 	}
 
-	public void init(List<SatelliteItemModel> satelliteList, FrameLayout parentLayout) {
+	public void init(List<SatelliteItemModel> satelliteList, RelativeLayout parentLayout) {
 		this.satelliteList = satelliteList;
 		this.parentLayout = parentLayout;
 	}

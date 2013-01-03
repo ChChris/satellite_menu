@@ -12,12 +12,20 @@ public abstract class AbstractAnimation {
 	
 	private List<SatelliteItemModel> satelliteList;
 	private ImageView planetMenu;
+	private RelativeLayout parentLayout;
+	private int satelliteDistance;
 	
+	public int getSatelliteDistance() {
+		return satelliteDistance;
+	}
+
+	public void setSatelliteDistance(int satelliteDistance) {
+		this.satelliteDistance = satelliteDistance;
+	}
+
 	public void setSatelliteList(List<SatelliteItemModel> satelliteList) {
 		this.satelliteList = satelliteList;
 	}
-
-	private RelativeLayout parentLayout;
 	
 	public RelativeLayout getParentLayout() {
 		return parentLayout;

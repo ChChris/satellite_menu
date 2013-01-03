@@ -155,7 +155,7 @@ public class SatelliteMenu extends RelativeLayout {
 			//view Ù–‘…Ë÷√
 			ImageView itemView = new ImageView(getContext());
 			itemView.setTag(itemModel);
-//			itemView.setVisibility(View.GONE);
+			itemView.setVisibility(View.GONE);
 			itemView.setScaleType(ScaleType.CENTER);
 			new ImageUtils().setImage(getContext(), itemView, itemModel);
 			RelativeLayout.LayoutParams satellitelayoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -231,6 +231,7 @@ public class SatelliteMenu extends RelativeLayout {
 		menuAnimation = settingPara.getMenuAnimation();
 		menuAnimation.init(satelliteList, this);
 		menuAnimation.setPlanetMenu(planetMenu);
+		menuAnimation.setSatelliteDistance(satelliteDistance);
 		
 		//ÃÌº”Œ¿–«
 		this.satelliteList.addAll(settingPara.getSatelliteList());

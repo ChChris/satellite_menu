@@ -2,6 +2,7 @@ package com.yvelabs.satellitemenu;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -10,6 +11,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -95,7 +97,7 @@ public class SatelliteMenu extends RelativeLayout {
 	private void init(Context context) {
 		planetMenu = new ImageView(context);
 		setBackgroundColor(Color.rgb(255, 229, 145));
-		planetMenu.setBackgroundColor(Color.rgb(84, 78, 110));
+//		planetMenu.setBackgroundColor(Color.rgb(84, 78, 110));
 		RelativeLayout.LayoutParams planetlayoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		planetMenu.setScaleType(ScaleType.CENTER);
 		addView(planetMenu, planetlayoutPara);
@@ -107,14 +109,12 @@ public class SatelliteMenu extends RelativeLayout {
 				if (plusAnimationActive.compareAndSet(false, true)) {
 					try {
 						if (launched == false) {
-							//TODO sun ying ∑¢…‰Œ¿–«
 							menuAnimation.createPlanetLaunchAnimation(planetMenu);
 							//Œ¿–«∑¢…‰∂Øª≠
 							for (SatelliteItemModel model : satelliteList) {
 								menuAnimation.createSatelliteLaunchAnimation(model.getView());
 							}
 						} else {
-							//TODO sun ying  ’ªÿŒ¿–«
 							menuAnimation.createPlanetDrawBackAnimation(planetMenu);
 							//Œ¿–« ’ªÿ∂Øª≠
 							for (SatelliteItemModel model : satelliteList) {
@@ -122,7 +122,11 @@ public class SatelliteMenu extends RelativeLayout {
 							}
 						}
 						launched = !launched;
-						Toast.makeText(SatelliteMenu.this.getContext(), "µ„ª˜–««Úº‡Ã˝ launched:" + launched, Toast.LENGTH_SHORT ).show();
+						
+						String a = "getLeft: " + v.getLeft() + ", getTop: "
+								+ v.getTop() + ", getRight: " + v.getRight()
+								+ ", getBottom: " + v.getBottom();
+						Toast.makeText(SatelliteMenu.this.getContext(), "µ„ª˜–««Úº‡Ã˝ launched:" + a, Toast.LENGTH_SHORT ).show();
 					} finally {
 						plusAnimationActive.set(false);
 					}
@@ -137,38 +141,45 @@ public class SatelliteMenu extends RelativeLayout {
 	 * @param satelliteItemList
 	 * @throws Exception
 	 */
-	private void addSatelliteItem (List<SatelliteItemModel> sateList){
+	private void addSatelliteItem (List<SatelliteItemModel> sateList, Map<String, Integer> planetPosition) throws Exception{
 		this.removeView(planetMenu);
 		
 		//…Ë÷√÷’µ„
 		new MyMathUtils().calcStopXY(satelliteList, originAngle, endAngle, satelliteDistance); 
 		
 		for (final SatelliteItemModel itemModel : satelliteList) {
+			//…Ë÷√Model Ù–‘
+			itemModel.setOriginX(planetPosition.get("X"));
+			itemModel.setOriginY(planetPosition.get("Y"));
+			
 			//view Ù–‘…Ë÷√
 			ImageView itemView = new ImageView(getContext());
 			itemView.setTag(itemModel);
-			itemView.setVisibility(View.GONE);
-			itemView.setX(itemModel.getStopX()); //TODO sun ying setX
-			itemView.setY(itemModel.getStopY()); //TODO sun ying setY
+//			itemView.setVisibility(View.GONE);
 			itemView.setScaleType(ScaleType.CENTER);
+			new ImageUtils().setImage(getContext(), itemView, itemModel);
 			RelativeLayout.LayoutParams satellitelayoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			
-			//…Ë÷√Model Ù–‘
-			itemModel.setOriginX(Double.valueOf(Math.rint(planetMenu.getX())).intValue());
-			itemModel.setOriginY(Double.valueOf(Math.rint(planetMenu.getY())).intValue());
+			Map<String, Integer> planetWHMap = new ImageUtils().getImageWH(this.getContext(), itemView.getDrawable());
+			Map<String, Integer> satelliteWHMap = new ImageUtils().getImageWH(this.getContext(), planetMenu.getDrawable());
+			int adjustX = planetWHMap.get("WIDTH") / 2 - satelliteWHMap.get("WIDTH") / 2;
+			int adjustY = planetWHMap.get("HEIGHT") / 2 - satelliteWHMap.get("HEIGHT") / 2;
+			itemModel.setAdjustX(adjustX);
+			itemModel.setAdjustY(adjustY);
+			itemModel.setStopX(itemModel.getStopX() + planetPosition.get("X") - adjustX);
+			itemModel.setStopY(itemModel.getStopY() + planetPosition.get("Y") - adjustY);
+			
+			satellitelayoutPara.leftMargin = itemModel.getStopX();
+			satellitelayoutPara.topMargin = itemModel.getStopY();
+			this.addView(itemView, satellitelayoutPara);
+			
 			itemModel.setView(itemView);
 			
-			try {
-				new ImageUtils().setImage(getContext(), itemView, itemModel);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 
 			//µ„ª˜Œ¿–«∞¥≈•º‡Ã˝∆˜
 			itemView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					//TODO sun ying µ„ª˜Œ¿–« ¬º˛
 					if (plusAnimationActive.compareAndSet(false, true)) {
 						try {
 							//∆Ù∂Ø–««Ú Œ¿–« ∂Øª≠
@@ -181,8 +192,6 @@ public class SatelliteMenu extends RelativeLayout {
 							
 							//÷√Œ™ ’ªÿ◊¥Ã¨
 							launched = false;
-							
-							Toast.makeText(SatelliteMenu.this.getContext(), "µ„ª˜Œ¿–«∞¥≈•º‡Ã˝∆˜", Toast.LENGTH_SHORT ).show();
 						
 						} finally {
 							plusAnimationActive.set(false);
@@ -190,8 +199,6 @@ public class SatelliteMenu extends RelativeLayout {
 					}
 				}
 			});
-			
-			this.addView(itemView, satellitelayoutPara);
 		}
 		menuAnimation.setSatelliteList(satelliteList);
 		
@@ -223,6 +230,7 @@ public class SatelliteMenu extends RelativeLayout {
 		//◊∞‘ÿ∂Øª≠
 		menuAnimation = settingPara.getMenuAnimation();
 		menuAnimation.init(satelliteList, this);
+		menuAnimation.setPlanetMenu(planetMenu);
 		
 		//ÃÌº”Œ¿–«
 		this.satelliteList.addAll(settingPara.getSatelliteList());
@@ -241,8 +249,8 @@ public class SatelliteMenu extends RelativeLayout {
 		int layoutWidth;
 		int layoutHeight;
 		try {
-			//int planetLenght = new ImageUtils().getLongestSide(getContext(), settingPara.getPlanetImgResourceId());
-			int satelliteLenght = new ImageUtils().getLongestImage(getContext(), satelliteList) * 2;
+			
+			int satelliteLenght = new ImageUtils().getLongestImage(getContext(), satelliteList) * 3;
 			int radius = satelliteDistance + satelliteLenght;
 			
 			if (settingPara.getPlanetPosition() != null && settingPara.getPlanetPosition().length() > 0) {
@@ -263,21 +271,59 @@ public class SatelliteMenu extends RelativeLayout {
 			setLayoutParams(parentlayoutPara);
 			
 			//…Ë÷√–««ÚŒª÷√
-			setViewPosition(settingPara.getPlanetPosition(), planetMenu);
-			
+			Log.d("sun_yve", "position:" + settingPara.getPlanetPosition());
+			Map<String, Integer> planetPosition = getPlanetPosition(settingPara.getPlanetPosition(), layoutWidth, layoutHeight);
+			RelativeLayout.LayoutParams planetlayoutPara =  (LayoutParams) planetMenu.getLayoutParams();
+			planetlayoutPara.leftMargin = planetPosition.get("X");
+			planetlayoutPara.topMargin = planetPosition.get("Y");
+			planetMenu.setLayoutParams(planetlayoutPara);
 			//…Ë÷√Œ¿–«
-			addSatelliteItem(satelliteList);
+			addSatelliteItem(satelliteList, planetPosition);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void setViewPosition (String position, View view) throws Exception {
-		RelativeLayout.LayoutParams layoutPara = (LayoutParams) view.getLayoutParams();
-		if (layoutPara == null) {
-			layoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	private Map<String, Integer> getPlanetPosition (String position, int layoutWidth, int layoutHeight) throws Exception {
+		Map<String, Integer> hwMap = new ImageUtils().getImageWH(this.getContext(), planetMenu.getDrawable());
+		
+		Map<String, Integer> resultMap = new HashMap<String, Integer>();
+		if (SettingPara.POSITION_TOP_LEFT.equals(position)) {
+			resultMap.put("X", 0);
+			resultMap.put("Y", 0);
+		} else if (SettingPara.POSITION_TOP_RIGHT.equals(position)) {
+			resultMap.put("X", layoutWidth - hwMap.get("WIDTH"));
+			resultMap.put("Y", 0);
+		} else if (SettingPara.POSITION_BOTTOM_LEFT.equals(position)) {
+			resultMap.put("X", 0 );
+			resultMap.put("Y", layoutHeight - hwMap.get("HEIGHT"));
+		} else if (SettingPara.POSITION_BOTTOM_RIGHT.equals(position)) {
+			resultMap.put("X", layoutWidth - hwMap.get("WIDTH"));
+			resultMap.put("Y", layoutHeight - hwMap.get("HEIGHT"));
+		} else if (SettingPara.POSITION_TOP_CENTER.equals(position)) {
+			resultMap.put("X", layoutWidth / 2 - hwMap.get("WIDTH") / 2);
+			resultMap.put("Y", 0);
+		} else if (SettingPara.POSITION_BOTTOM_CENTER.equals(position)) {
+			resultMap.put("X", layoutWidth / 2  - hwMap.get("WIDTH") / 2);
+			resultMap.put("Y", layoutHeight - hwMap.get("HEIGHT"));
+		} else if (SettingPara.POSITION_LEFT_CENTER.equals(position)) {
+			resultMap.put("X", 0);
+			resultMap.put("Y", layoutHeight / 2 - hwMap.get("HEIGHT") / 2);
+		} else if (SettingPara.POSITION_RIGHT_CENTER.equals(position)) {
+			resultMap.put("X", layoutWidth  - hwMap.get("WIDTH"));
+			resultMap.put("Y", layoutHeight / 2 - hwMap.get("HEIGHT") / 2);
+		} else if (SettingPara.POSITION_CENTER.equals(position)) {
+			resultMap.put("X", layoutWidth / 2  - hwMap.get("WIDTH") / 2);
+			resultMap.put("Y", layoutHeight / 2 - hwMap.get("HEIGHT") / 2);
+		} else {
+			throw new Exception ("(setViewPosition)there are no this planet position (" + position + ")") ;
 		}
+		
+		return resultMap;
+	}
+	
+	private void setViewPosition (String position, RelativeLayout.LayoutParams layoutPara) throws Exception {
 		
 		if (SettingPara.POSITION_TOP_LEFT.equals(position)) {
 			layoutPara.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -309,7 +355,6 @@ public class SatelliteMenu extends RelativeLayout {
 			throw new Exception ("(setViewPosition)there are no this planet position (" + position + ")") ;
 		}
 		
-		view.setLayoutParams(layoutPara);
 	}
 	
 }

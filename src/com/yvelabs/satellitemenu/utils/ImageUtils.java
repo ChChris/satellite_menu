@@ -3,7 +3,9 @@ package com.yvelabs.satellitemenu.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -75,6 +77,12 @@ public class ImageUtils {
 		return tempLongest;
 	}
 	
+	/**
+	 * 得到图片的最大边
+	 * @param context
+	 * @param resourceId
+	 * @return
+	 */
 	public int getLongestSide (Context context, int resourceId) {
 		Bitmap bm = BitmapFactory.decodeResource(context.getResources(), resourceId);
 		return bm.getHeight() > bm.getWidth() ? bm.getHeight() : bm.getWidth();
@@ -91,6 +99,38 @@ public class ImageUtils {
 			return bm.getHeight() > bm.getWidth() ? bm.getHeight() : bm.getWidth();
 	    }
 		return 0;
+	}
+	
+	/**
+	 * 得到图片的高和宽
+	 * @param context
+	 * @param resourceId
+	 * @return
+	 */
+	public Map<String, Integer> getImageWH (Context context, int resourceId) {
+		Map<String, Integer> resultMap = new HashMap<String, Integer>();
+		Bitmap bm = BitmapFactory.decodeResource(context.getResources(), resourceId);
+		resultMap.put("WIDTH", bm.getWidth());
+		resultMap.put("HEIGHT", bm.getHeight());
+		return resultMap;
+	}
+	
+	public Map<String, Integer> getImageWH (Context context, String fileName) throws IOException {
+		Map<String, Integer> resultMap = new HashMap<String, Integer>();
+		Bitmap bm = getImageFromAssetFile(context, fileName);
+		resultMap.put("WIDTH", bm.getWidth());
+		resultMap.put("HEIGHT", bm.getHeight());
+		return resultMap;
+	}
+	
+	public Map<String, Integer> getImageWH (Context context, Drawable drawable) {
+		Map<String, Integer> resultMap = new HashMap<String, Integer>();
+		if (drawable instanceof BitmapDrawable) {
+			Bitmap bm =  ((BitmapDrawable)drawable).getBitmap();
+			resultMap.put("WIDTH", bm.getWidth());
+			resultMap.put("HEIGHT", bm.getHeight());
+	    }
+		return resultMap;
 	}
 	
 	

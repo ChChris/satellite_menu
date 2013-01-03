@@ -14,6 +14,8 @@ public class SatelliteItemModel {
 	private int originY;
     private int stopX;
     private int stopY;
+    private int adjustX;
+    private int adjustY;
     
 	public int getOriginX() {
 		return originX;
@@ -80,6 +82,18 @@ public class SatelliteItemModel {
 	}
 	public void setStopY(int stopY) {
 		this.stopY = stopY;
+	}
+	public int getAdjustX() {
+		return adjustX;
+	}
+	public void setAdjustX(int adjustX) {
+		this.adjustX = adjustX;
+	}
+	public int getAdjustY() {
+		return adjustY;
+	}
+	public void setAdjustY(int adjustY) {
+		this.adjustY = adjustY;
 	}
 
 }

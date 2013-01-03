@@ -5,12 +5,13 @@ import java.util.List;
 
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 public abstract class AbstractAnimation {
 	
 	private List<SatelliteItemModel> satelliteList;
+	private ImageView planetMenu;
 	
 	public void setSatelliteList(List<SatelliteItemModel> satelliteList) {
 		this.satelliteList = satelliteList;
@@ -35,6 +36,13 @@ public abstract class AbstractAnimation {
 		this.parentLayout = parentLayout;
 	}
 
+	public ImageView getPlanetMenu() {
+		return planetMenu;
+	}
+
+	public void setPlanetMenu(ImageView planetMenu) {
+		this.planetMenu = planetMenu;
+	}
 	
 	public abstract Animation createPlanetLaunchAnimation(View view);
 	

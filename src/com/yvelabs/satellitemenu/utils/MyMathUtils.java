@@ -44,7 +44,12 @@ public class MyMathUtils {
 	}
 
 	public int getAverageAngle(int angle, int itemCount) {
-		return angle / (itemCount - 1);
+		if (angle > 350) {
+			return angle / itemCount;
+		} else {
+			return angle / (itemCount - 1);
+		}
+		
 	}
 
 	public static int getStopX(float angle, int distance) {
@@ -59,8 +64,8 @@ public class MyMathUtils {
 
 	public void calcStopXY(List<SatelliteItemModel> satelliteList,
 			int originAngle, int endAngle, int distance) {
-		int aveAngle = getAverageAngle((endAngle - originAngle),
-				satelliteList.size());
+		int aveAngle = Math.abs(getAverageAngle((endAngle - originAngle),
+				satelliteList.size()));
 
 		int index = 0;
 		for (SatelliteItemModel itemModel : satelliteList) {

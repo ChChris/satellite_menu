@@ -1,5 +1,6 @@
 package com.yvelabs.satellitemenu;
 
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -58,7 +59,10 @@ public class DefaultAnimation extends AbstractAnimation {
 		AnimationSet animationSet = new AnimationSet(false);
 		SatelliteItemModel itemModel = (SatelliteItemModel) satellite.getTag();
 		
-		TranslateAnimation translate = new TranslateAnimation(itemModel.getOriginX(), /*itemModel.getFinalX()*/0, itemModel.getOriginY(), /*itemModel.getFinalY()*/0);
+		Log.d("sun_yve", "itemModel.getId(): " + itemModel.getId() + ", itemModel.getOriginX(): " + itemModel.getOriginX() + ", itemModel.getOriginY()" + itemModel.getOriginY()
+				+ ", itemModel.getStopX(): " + itemModel.getStopX() + ", itemModel.getStopY():" + itemModel.getStopY());
+		
+		TranslateAnimation translate = new TranslateAnimation(itemModel.getOriginX() - itemModel.getStopX() - itemModel.getAdjustX(), 0, itemModel.getOriginY() - itemModel.getStopY() - itemModel.getAdjustX(), 0);
 		translate.setStartOffset(0);
 		translate.setDuration(500);
 		translate.setAnimationListener(new SatelliteLaunchListener(satellite));
@@ -78,7 +82,7 @@ public class DefaultAnimation extends AbstractAnimation {
 		SatelliteItemModel itemModel = (SatelliteItemModel) view.getTag();
 
 		//ÒÆ¶¯¶¯»­
-		TranslateAnimation translate = new TranslateAnimation(/*itemModel.getFinalX()*/0, itemModel.getOriginX(), /*itemModel.getFinalY()*/0, itemModel.getOriginY());
+		TranslateAnimation translate = new TranslateAnimation(0, itemModel.getOriginX() - itemModel.getStopX() - itemModel.getAdjustX(), 0, itemModel.getOriginY() - itemModel.getStopY() - itemModel.getAdjustX());
 		translate.setStartOffset(0);
 		translate.setDuration(500);
 		translate.setAnimationListener(new SatelliteDrawBackListener(view));
@@ -108,7 +112,7 @@ public class DefaultAnimation extends AbstractAnimation {
 	private void drawBackAllSatellites(int delayTime) {
 		TranslateAnimation translate;
 		for (SatelliteItemModel itemModel : getSatelliteList()) {
-			translate = new TranslateAnimation(/*itemModel.getFinalX()*/0, itemModel.getOriginX(), /*itemModel.getFinalY()*/0, itemModel.getOriginY());
+			translate = new TranslateAnimation(0, itemModel.getOriginX() - itemModel.getStopX() - itemModel.getAdjustX(), 0, itemModel.getOriginY() - itemModel.getStopY() - itemModel.getAdjustX());
 			translate.setStartOffset(delayTime);
 			translate.setDuration(500);
 			translate.setAnimationListener(new SatelliteDrawBackListener(itemModel.getView()));
@@ -127,7 +131,7 @@ public class DefaultAnimation extends AbstractAnimation {
 		
 		public SatelliteLaunchListener (View satellite) {
 			this.satellite = satellite;
-			itemModel = (SatelliteItemModel) satellite.getTag();
+//			itemModel = (SatelliteItemModel) satellite.getTag();
 		}
 
 		@Override
@@ -158,7 +162,7 @@ public class DefaultAnimation extends AbstractAnimation {
 		
 		private SatelliteDrawBackListener (View view) {
 			this.view = view;
-			itemModel = (SatelliteItemModel) view.getTag();
+//			itemModel = (SatelliteItemModel) view.getTag();
 		}
 
 		@Override

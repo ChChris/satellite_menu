@@ -89,7 +89,7 @@ public class DefaultAnimation extends AbstractAnimation {
 		rotateAnimation.setInterpolator(new AccelerateInterpolator(1.0F));
 		rotateAnimation.setDuration(200);
 		rotateAnimation.setStartOffset(400);
-		animationSet.addAnimation(rotateAnimation);
+//		animationSet.addAnimation(rotateAnimation);
 
 		//
 		animationSet.setStartOffset(30 * itemModel.getId());

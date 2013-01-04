@@ -33,25 +33,28 @@ public class SettingPara {
 	private int planetY; //ÐÇÇò×ø±êY
 	private String planetPosition; //ÐÇÇòÎ»ÖÃ
 	
-	public SettingPara (int originAngle, int endAngle, int satelliteDistance, int planetImgResourceId) {
+	public SettingPara (int originAngle, int endAngle, int satelliteDistance, int planetImgResourceId, List<SatelliteItemModel> satelliteList) {
 		this.originAngle = originAngle;
 		this.endAngle = endAngle;
 		this.satelliteDistance = satelliteDistance;
 		this.planetImgResourceId = planetImgResourceId;
+		this.satelliteList = satelliteList;
 	}
 	
-	public SettingPara (int originAngle, int endAngle, int satelliteDistance, Drawable planetImgDrawable) {
+	public SettingPara (int originAngle, int endAngle, int satelliteDistance, Drawable planetImgDrawable, List<SatelliteItemModel> satelliteList) {
 		this.originAngle = originAngle;
 		this.endAngle = endAngle;
 		this.satelliteDistance = satelliteDistance;
 		this.planetImgDrawable = planetImgDrawable;
+		this.satelliteList = satelliteList;
 	}
 	
-	public SettingPara (int originAngle, int endAngle, int satelliteDistance, String planetImgAssetPath) {
+	public SettingPara (int originAngle, int endAngle, int satelliteDistance, String planetImgAssetPath, List<SatelliteItemModel> satelliteList) {
 		this.originAngle = originAngle;
 		this.endAngle = endAngle;
 		this.satelliteDistance = satelliteDistance;
 		this.planetImgAssetPath = planetImgAssetPath;
+		this.satelliteList = satelliteList;
 	}
 	
 	

@@ -4,35 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.yvelabs.satellitemenu.SatelliteItemModel;
 import com.yvelabs.satellitemenu.SettingPara;
 
 public class MyMathUtils {
-	private static final HashMap<Integer, HashMap<String, Integer>> quadrantAngle; 
 	
-	static {
-		quadrantAngle = new HashMap<Integer, HashMap<String,Integer>> ();
-		//1
-		HashMap<String, Integer> angles = new HashMap<String, Integer>();
-		angles.put("START", 0);
-		angles.put("END", 90);
-		quadrantAngle.put(1, angles);
-		//2
-		angles = new HashMap<String, Integer>();
-		angles.put("START", 90);
-		angles.put("END", 180);
-		quadrantAngle.put(2, angles);
-		//3
-		angles = new HashMap<String, Integer>();
-		angles.put("START", 180);
-		angles.put("END", 270);
-		quadrantAngle.put(3, angles);
-		//4
-		angles = new HashMap<String, Integer>();
-		angles.put("START", 270);
-		angles.put("END", 360);
-		quadrantAngle.put(4, angles);
+	public static int getRandom(int min, int max) {
+		return  new Random().nextInt(max) % (max - min + 1) + min;
 	}
 	
 	public static int getAngle (int ang) {

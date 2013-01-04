@@ -10,10 +10,10 @@ import android.widget.RelativeLayout;
 
 public abstract class AbstractAnimation {
 	
-	private List<SatelliteItemModel> satelliteList;
-	private ImageView planetMenu;
-	private RelativeLayout parentLayout;
-	private int satelliteDistance;
+	private List<SatelliteItemModel> satelliteList; //ÎÀÐÇ
+	private ImageView planetMenu; //ÐÇÇò 
+	private RelativeLayout parentLayout; //¸¸¿Ø¼þ
+	private int satelliteDistance; //ÎÀÐÇ¾àÀë
 	
 	public int getSatelliteDistance() {
 		return satelliteDistance;
@@ -63,78 +63,6 @@ public abstract class AbstractAnimation {
 	public abstract Animation createSatelliteDrawBackAnimation(View view);
 	
 	public abstract Animation createSatelliteItemClickedAnimation(View view);
-	
-	/**
-	 * ÐÇÇò  ·¢Éä ¶¯»­¼àÌýÆ÷
-	 * @author Yve
-	 *
-	 */
-	private class planetLaunchListener implements Animation.AnimationListener {
-
-		@Override
-		public void onAnimationEnd(Animation animation) {
-			
-		}
-
-		@Override
-		public void onAnimationRepeat(Animation animation) {
-			
-		}
-
-		@Override
-		public void onAnimationStart(Animation animation) {
-			
-		}
-		
-	}
-	
-	/**
-	 * ÐÇÇò ÊÕ»Ø ¶¯»­¼àÌý
-	 * @author Yve
-	 *
-	 */
-	private class planetDrawBackListener implements Animation.AnimationListener {
-
-		@Override
-		public void onAnimationEnd(Animation animation) {
-			
-		}
-
-		@Override
-		public void onAnimationRepeat(Animation animation) {
-			
-		}
-
-		@Override
-		public void onAnimationStart(Animation animation) {
-			
-		}
-		
-	}
-	
-	/**
-	 * ÐÇÇò µã»÷ ¶¯»­¼àÌý
-	 * @author Yve
-	 *
-	 */
-	private class planetItemClickedListener implements Animation.AnimationListener {
-
-		@Override
-		public void onAnimationEnd(Animation animation) {
-			
-		}
-
-		@Override
-		public void onAnimationRepeat(Animation animation) {
-			
-		}
-
-		@Override
-		public void onAnimationStart(Animation animation) {
-			
-		}
-		
-	}
 	
 
 }

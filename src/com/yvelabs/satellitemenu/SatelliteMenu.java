@@ -36,6 +36,7 @@ public class SatelliteMenu extends RelativeLayout {
 	private ImageView planetMenu;
 	private AbstractAnimation menuAnimation;
 	private OnSatelliteClickedListener onSatelliteClickedListener;
+	private OnPlanetClickedListener onPlanetClickedListener;
 	private List<SatelliteItemModel> satelliteList = new ArrayList<SatelliteItemModel>();
 	private boolean launched = false;
 	private AtomicBoolean plusAnimationActive = new AtomicBoolean(false);
@@ -89,6 +90,14 @@ public class SatelliteMenu extends RelativeLayout {
 	public void setOnSatelliteClickedListener(OnSatelliteClickedListener onSatelliteClickedListener) {
 		this.onSatelliteClickedListener = onSatelliteClickedListener;
 	}
+	
+	public interface OnPlanetClickedListener {
+		public void onClick(View view);
+	}
+	
+	public void setOnPlanetClickedListener (OnPlanetClickedListener onPlanetClickedListener) {
+		this.onPlanetClickedListener = onPlanetClickedListener;
+	}
 
 	/**
 	 * 初始化
@@ -96,8 +105,6 @@ public class SatelliteMenu extends RelativeLayout {
 	 */
 	private void init(Context context) {
 		planetMenu = new ImageView(context);
-//		setBackgroundColor(Color.rgb(255, 229, 145));
-//		planetMenu.setBackgroundColor(Color.rgb(84, 78, 110));
 		RelativeLayout.LayoutParams planetlayoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		planetMenu.setScaleType(ScaleType.CENTER);
 		addView(planetMenu, planetlayoutPara);
@@ -107,6 +114,9 @@ public class SatelliteMenu extends RelativeLayout {
 			@Override
 			public void onClick(View v) {
 				if (plusAnimationActive.compareAndSet(false, true)) {
+					if (onPlanetClickedListener != null) 
+						onPlanetClickedListener.onClick(v);
+					
 					try {
 						if (launched == false) {
 							menuAnimation.createPlanetLaunchAnimation(planetMenu);
@@ -178,13 +188,13 @@ public class SatelliteMenu extends RelativeLayout {
 				public void onClick(View view) {
 					if (plusAnimationActive.compareAndSet(false, true)) {
 						try {
-							//启动星球 卫星 动画
-							menuAnimation.createSatelliteItemClickedAnimation(view);
-							menuAnimation.createPlanetItemClickedAnimation(planetMenu);
-							
 							//调用监听器
 							if (onSatelliteClickedListener != null) 
 								onSatelliteClickedListener.onClick(view);
+							
+							//启动星球 卫星 动画
+							menuAnimation.createSatelliteItemClickedAnimation(view);
+							menuAnimation.createPlanetItemClickedAnimation(planetMenu);
 							
 							//置为收回状态
 							launched = false;
@@ -261,7 +271,7 @@ public class SatelliteMenu extends RelativeLayout {
 				settingPara.setPlanetPosition(map.get("POSITION"));
 			}
 			
-			//设置layout 高, 宽
+			//设置parent layout 高, 宽
 			RelativeLayout.LayoutParams parentlayoutPara = (LayoutParams) getLayoutParams();
 			parentlayoutPara.width = layoutWidth ;
 			parentlayoutPara.height = layoutHeight;

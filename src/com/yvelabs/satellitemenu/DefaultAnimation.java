@@ -11,6 +11,11 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
+/**
+ * 
+ * @author Yve
+ *
+ */
 public class DefaultAnimation extends AbstractAnimation {
 
 	/**

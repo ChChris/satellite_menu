@@ -136,30 +136,5 @@ public abstract class AbstractAnimation {
 		
 	}
 	
-	
-	
-	/**
-	 * ÎÀÐÇ µã»÷ ¶¯»­¼àÌýÆ÷
-	 * @author Yve
-	 *
-	 */
-	private class satelliteItemClickedListener implements Animation.AnimationListener {
-
-		@Override
-		public void onAnimationEnd(Animation animation) {
-			
-		}
-
-		@Override
-		public void onAnimationRepeat(Animation animation) {
-			
-		}
-
-		@Override
-		public void onAnimationStart(Animation animation) {
-			
-		}
-		
-	}
 
 }

@@ -1,12 +1,14 @@
 package com.yvelabs.satellitemenu;
 
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.DecelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
 public class DefaultAnimation extends AbstractAnimation {
@@ -55,44 +57,43 @@ public class DefaultAnimation extends AbstractAnimation {
 
 	/**
 	 * 卫星 发射动画
+	 * @throws Exception 
 	 */
 	public Animation createSatelliteLaunchAnimation(View satellite) {
 		AnimationSet animationSet = new AnimationSet(false);
 		SatelliteItemModel itemModel = (SatelliteItemModel) satellite.getTag();
-		
-		//移动动画
-		TranslateAnimation translate = new TranslateAnimation(itemModel.getOriginX() - itemModel.getStopX() - itemModel.getAdjustX(), 0, itemModel.getOriginY() - itemModel.getStopY() - itemModel.getAdjustX(), 0);
-		translate.setStartOffset(0);
-		translate.setDuration(500);
-		translate.setAnimationListener(new SatelliteLaunchListener(satellite));
-		translate.setInterpolator(new OvershootInterpolator(3F));
-		animationSet.addAnimation(translate);
-		
-		//透明动画
+
+		// 透明动画
 		AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
-        long alphaDuration = 100;
-        if(getSatelliteDistance() < 60){
-        	alphaDuration = getSatelliteDistance() / 4;
-        }
-        alphaAnimation.setDuration(alphaDuration);
-        alphaAnimation.setStartOffset(0);
-        animationSet.addAnimation(alphaAnimation);
-        
-        //旋转动画
-        RotateAnimation rotate = new RotateAnimation(0f, 360f, 
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        
-        rotate.setInterpolator(new DecelerateInterpolator(1F));
-        long duration = 100;
-        if(getSatelliteDistance() <= 150){
-            duration = getSatelliteDistance() / 3;
-        }
-        rotate.setDuration(300);
-        rotate.setStartOffset(duration);   
-        animationSet.addAnimation(rotate);
-        
-		
+		long alphaDuration = 60;
+		alphaAnimation.setDuration(alphaDuration);
+		alphaAnimation.setStartOffset(0);
+		animationSet.addAnimation(alphaAnimation);
+
+		// 移动动画
+		TranslateAnimation translateAnimation = new TranslateAnimation(
+				itemModel.getOriginX() - itemModel.getStopX()
+						- itemModel.getAdjustX(), 0, itemModel.getOriginY()
+						- itemModel.getStopY() - itemModel.getAdjustX(), 0);
+		translateAnimation.setStartOffset(0);
+		translateAnimation.setDuration(400);
+		translateAnimation.setAnimationListener(new SatelliteLaunchListener(
+				satellite));
+		translateAnimation.setInterpolator(new OvershootInterpolator(3F));
+		animationSet.addAnimation(translateAnimation);
+
+		// 旋转动画
+		RotateAnimation rotateAnimation = new RotateAnimation(0, 360,
+				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+				0.5f);
+		rotateAnimation.setInterpolator(new AccelerateInterpolator(1.0F));
+		rotateAnimation.setDuration(200);
+		rotateAnimation.setStartOffset(400);
+		animationSet.addAnimation(rotateAnimation);
+
+		//
+		animationSet.setStartOffset(30 * itemModel.getId());
+
 		satellite.startAnimation(animationSet);
 		return animationSet;
 	}
@@ -103,24 +104,31 @@ public class DefaultAnimation extends AbstractAnimation {
 	public Animation createSatelliteDrawBackAnimation(View view) {
 		AnimationSet animationSet = new AnimationSet(false);
 		SatelliteItemModel itemModel = (SatelliteItemModel) view.getTag();
+		
+		//旋转动画
+		RotateAnimation rotateAnimation = new RotateAnimation(720, 0, 
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f);
+		 rotateAnimation.setInterpolator(new AccelerateInterpolator(1.2F));
+		 rotateAnimation.setDuration(400);
+		 animationSet.addAnimation(rotateAnimation);
 
 		//移动动画
-		TranslateAnimation translate = new TranslateAnimation(0, itemModel.getOriginX() - itemModel.getStopX() - itemModel.getAdjustX(), 0, itemModel.getOriginY() - itemModel.getStopY() - itemModel.getAdjustX());
-		translate.setStartOffset(0);
-		translate.setDuration(500);
-		translate.setAnimationListener(new SatelliteDrawBackListener(view));
-		animationSet.addAnimation(translate);
-		
+		TranslateAnimation translateAnimation = new TranslateAnimation(0, itemModel.getOriginX() - itemModel.getStopX() - itemModel.getAdjustX(), 0, itemModel.getOriginY() - itemModel.getStopY() - itemModel.getAdjustX());
+		translateAnimation.setStartOffset(250);
+		translateAnimation.setDuration(400);
+		translateAnimation.setAnimationListener(new SatelliteDrawBackListener(view));
+		translateAnimation.setInterpolator(new AnticipateInterpolator(3F));
+		animationSet.addAnimation(translateAnimation);
 		
 		//透明动画
 		AlphaAnimation alphaAnimation = new AlphaAnimation(1f, 0f);
-        long alphaDuration = 100;
-        if(getSatelliteDistance() < 60){
-        	alphaDuration = getSatelliteDistance() / 4;
-        }
-        alphaAnimation.setDuration(300);
-        alphaAnimation.setStartOffset(200);
+        alphaAnimation.setDuration(10);
+        alphaAnimation.setStartOffset(640);
         animationSet.addAnimation(alphaAnimation);
+        
+        //
+        animationSet.setStartOffset(30 * itemModel.getId());
 		
 		view.startAnimation(animationSet);
 		return animationSet;
@@ -130,43 +138,32 @@ public class DefaultAnimation extends AbstractAnimation {
 	 * 卫星 点击动画
 	 */
 	public Animation createSatelliteItemClickedAnimation(View view) {
-		AnimationSet animationSet = new AnimationSet(false);
+		AnimationSet clickedAnimationSet = new AnimationSet(false);
 		//收回动画
+		//放大动画
+		ScaleAnimation scaleAnimation = new ScaleAnimation(1, 3, 1, 3, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+		scaleAnimation.setDuration(600);
+		scaleAnimation.setStartOffset(100);
+		clickedAnimationSet.addAnimation(scaleAnimation);
+		//透明动画
+		AlphaAnimation alphaAnimation = new AlphaAnimation(1f, 0f);
+		alphaAnimation.setDuration(300);
+		alphaAnimation.setStartOffset(250);
+		clickedAnimationSet.addAnimation(alphaAnimation);
+		
+		clickedAnimationSet.setAnimationListener(new SatelliteItemClickedListener(view));
 		
 		//收回所有卫星
-		drawBackAllSatellites(100);
+		for (SatelliteItemModel itemModel : getSatelliteList()) {
+			if (itemModel.getId() != ((SatelliteItemModel)view.getTag()).getId()) 
+			createSatelliteDrawBackAnimation(itemModel.getView());
+		}
 		
-		return animationSet;
+		view.startAnimation(clickedAnimationSet);
+		
+		return clickedAnimationSet;
 	}
 	
-	/**
-	 * 收回所有卫星
-	 * @param delayTime
-	 */
-	private void drawBackAllSatellites(int delayTime) {
-		AnimationSet animationSet = new AnimationSet(false);
-		AlphaAnimation alphaAnimation;
-		for (SatelliteItemModel itemModel : getSatelliteList()) {
-			TranslateAnimation translate = new TranslateAnimation(0, itemModel.getOriginX() - itemModel.getStopX() - itemModel.getAdjustX(), 0, itemModel.getOriginY() - itemModel.getStopY() - itemModel.getAdjustX());
-			translate.setStartOffset(0);
-			translate.setDuration(500);
-			translate.setAnimationListener(new SatelliteDrawBackListener(itemModel.getView()));
-			animationSet.addAnimation(translate);
-			
-			//透明动画
-			/*alphaAnimation = new AlphaAnimation(1f, 0f);
-	        long alphaDuration = 10;
-	        if(expandDuration < 10){
-	        	alphaDuration = expandDuration / 10;
-	        }
-	        alphaAnimation.setDuration(alphaDuration);
-	        alphaAnimation.setStartOffset((delay + duration) - alphaDuration);
-	        
-	        animationSet.addAnimation(alphaAnimation);*/
-			
-			itemModel.getView().startAnimation(animationSet);
-		}
-	}
 	
 	/**
 	 * 卫星 发射 动画监听
@@ -174,17 +171,16 @@ public class DefaultAnimation extends AbstractAnimation {
 	 *
 	 */
 	private class SatelliteLaunchListener implements Animation.AnimationListener {
-		private View satellite ;
+		private View satellite;
 		private SatelliteItemModel itemModel;
 		
 		public SatelliteLaunchListener (View satellite) {
 			this.satellite = satellite;
-			itemModel = (SatelliteItemModel) satellite.getTag();
+//			itemModel = (SatelliteItemModel) satellite.getTag();
 		}
 
 		@Override
 		public void onAnimationEnd(Animation animation) {
-			
 		}
 
 		@Override
@@ -195,7 +191,6 @@ public class DefaultAnimation extends AbstractAnimation {
 		@Override
 		public void onAnimationStart(Animation animation) {
 			satellite.setVisibility(View.VISIBLE);
-//			satellite.layout(itemModel.getStopX(), itemModel.getStopY(), itemModel.getStopX() + satellite.getWidth(), itemModel.getStopY() + satellite.getHeight());
 		}
 		
 	}
@@ -231,5 +226,32 @@ public class DefaultAnimation extends AbstractAnimation {
 		}
 		
 	}
+	
+	/**
+	 * 卫星 点击 动画监听器
+	 * @author Yve
+	 *
+	 */
+	private class SatelliteItemClickedListener implements Animation.AnimationListener {
+		private View view;
+		
+		public SatelliteItemClickedListener (View view) {
+			this.view = view;
+		}
 
+		@Override
+		public void onAnimationEnd(Animation animation) {
+			view.setVisibility(View.GONE);
+		}
+
+		@Override
+		public void onAnimationRepeat(Animation animation) {
+			
+		}
+
+		@Override
+		public void onAnimationStart(Animation animation) {
+			
+		}
+	}
 }

@@ -96,7 +96,7 @@ public class SatelliteMenu extends RelativeLayout {
 	 */
 	private void init(Context context) {
 		planetMenu = new ImageView(context);
-		setBackgroundColor(Color.rgb(255, 229, 145));
+//		setBackgroundColor(Color.rgb(255, 229, 145));
 //		planetMenu.setBackgroundColor(Color.rgb(84, 78, 110));
 		RelativeLayout.LayoutParams planetlayoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		planetMenu.setScaleType(ScaleType.CENTER);
@@ -123,10 +123,6 @@ public class SatelliteMenu extends RelativeLayout {
 						}
 						launched = !launched;
 						
-						String a = "getLeft: " + v.getLeft() + ", getTop: "
-								+ v.getTop() + ", getRight: " + v.getRight()
-								+ ", getBottom: " + v.getBottom();
-						Toast.makeText(SatelliteMenu.this.getContext(), "µã»÷ÐÇÇò¼àÌý launched:" + a, Toast.LENGTH_SHORT ).show();
 					} finally {
 						plusAnimationActive.set(false);
 					}
@@ -183,8 +179,8 @@ public class SatelliteMenu extends RelativeLayout {
 					if (plusAnimationActive.compareAndSet(false, true)) {
 						try {
 							//Æô¶¯ÐÇÇò ÎÀÐÇ ¶¯»­
-							menuAnimation.createPlanetItemClickedAnimation(planetMenu);
 							menuAnimation.createSatelliteItemClickedAnimation(view);
+							menuAnimation.createPlanetItemClickedAnimation(planetMenu);
 							
 							//µ÷ÓÃ¼àÌýÆ÷
 							if (onSatelliteClickedListener != null) 
@@ -250,8 +246,8 @@ public class SatelliteMenu extends RelativeLayout {
 		int layoutWidth;
 		int layoutHeight;
 		try {
-			
-			int satelliteLenght = new ImageUtils().getLongestImage(getContext(), satelliteList) * 3;
+			//¼ÆËã°ë¾¶
+			int satelliteLenght = new ImageUtils().getLongestImage(getContext(), satelliteList) * 2;
 			int radius = satelliteDistance + satelliteLenght;
 			
 			if (settingPara.getPlanetPosition() != null && settingPara.getPlanetPosition().length() > 0) {

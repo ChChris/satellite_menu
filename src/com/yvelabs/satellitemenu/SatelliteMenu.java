@@ -161,7 +161,6 @@ public class SatelliteMenu extends RelativeLayout {
 			//view Ù–‘…Ë÷√
 			ImageView itemView = new ImageView(getContext());
 			itemView.setTag(itemModel);
-			itemView.setVisibility(View.GONE);
 			itemView.setScaleType(ScaleType.CENTER);
 			new ImageUtils().setImage(getContext(), itemView, itemModel);
 			RelativeLayout.LayoutParams satellitelayoutPara = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -178,7 +177,7 @@ public class SatelliteMenu extends RelativeLayout {
 			satellitelayoutPara.leftMargin = itemModel.getStopX();
 			satellitelayoutPara.topMargin = itemModel.getStopY();
 			this.addView(itemView, satellitelayoutPara);
-			
+			itemView.setVisibility(View.GONE);
 			itemModel.setView(itemView);
 			
 

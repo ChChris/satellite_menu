@@ -44,7 +44,7 @@ public class MyMathUtils {
 
 	public void calcStopXY(List<SatelliteItemModel> satelliteList,
 			int originAngle, int endAngle, int distance) {
-		int aveAngle = Math.abs(getAverageAngle((endAngle - originAngle),
+		int aveAngle = Math.abs(getAverageAngle(getIncludedAngle(originAngle, endAngle),
 				satelliteList.size()));
 
 		int index = 0;

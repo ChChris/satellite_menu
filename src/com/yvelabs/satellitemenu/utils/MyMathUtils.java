@@ -164,6 +164,13 @@ public class MyMathUtils {
 		return resultMap;
 	}
 	
+	/**
+	 * ¼ÆËã parent layout µÄ¿í¸ß
+	 * @param position
+	 * @param radius
+	 * @return
+	 * @throws Exception
+	 */
 	public Map<String, String> getWidthHeightByPosition (String position, int radius) throws Exception {
 		Map<String, String> resultMap = new HashMap<String, String>();
 		if (SettingPara.POSITION_TOP_LEFT.equals(position)) {

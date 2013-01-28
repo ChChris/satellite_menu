@@ -15,40 +15,40 @@ public abstract class AbstractAnimation {
 	private RelativeLayout parentLayout; //¸¸¿Ø¼þ
 	private int satelliteDistance; //ÎÀÐÇ¾àÀë
 	
-	public int getSatelliteDistance() {
+	protected int getSatelliteDistance() {
 		return satelliteDistance;
 	}
 
-	public void setSatelliteDistance(int satelliteDistance) {
+	protected void setSatelliteDistance(int satelliteDistance) {
 		this.satelliteDistance = satelliteDistance;
 	}
 
-	public void setSatelliteList(List<SatelliteItemModel> satelliteList) {
+	protected void setSatelliteList(List<SatelliteItemModel> satelliteList) {
 		this.satelliteList = satelliteList;
 	}
 	
-	public RelativeLayout getParentLayout() {
+	protected RelativeLayout getParentLayout() {
 		return parentLayout;
 	}
 
-	public void setParentLayout(RelativeLayout parentLayout) {
+	protected void setParentLayout(RelativeLayout parentLayout) {
 		this.parentLayout = parentLayout;
 	}
 
-	public List<SatelliteItemModel> getSatelliteList() {
+	protected List<SatelliteItemModel> getSatelliteList() {
 		return satelliteList;
 	}
 
-	public void init(List<SatelliteItemModel> satelliteList, RelativeLayout parentLayout) {
+	protected void init(List<SatelliteItemModel> satelliteList, RelativeLayout parentLayout) {
 		this.satelliteList = satelliteList;
 		this.parentLayout = parentLayout;
 	}
 
-	public ImageView getPlanetMenu() {
+	protected ImageView getPlanetMenu() {
 		return planetMenu;
 	}
 
-	public void setPlanetMenu(ImageView planetMenu) {
+	protected void setPlanetMenu(ImageView planetMenu) {
 		this.planetMenu = planetMenu;
 	}
 	

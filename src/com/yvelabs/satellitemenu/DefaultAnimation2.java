@@ -14,6 +14,22 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
 public class DefaultAnimation2 extends AbstractAnimation {
+	
+	private int satelliteStartOffsetMin = 0;
+	private int satelliteStartOffsetMax = 100;
+	
+	public int getSatelliteStartOffsetMin() {
+		return satelliteStartOffsetMin;
+	}
+	public void setSatelliteStartOffsetMin(int satelliteStartOffsetMin) {
+		this.satelliteStartOffsetMin = satelliteStartOffsetMin;
+	}
+	public int getSatelliteStartOffsetMax() {
+		return satelliteStartOffsetMax;
+	}
+	public void setSatelliteStartOffsetMax(int satelliteStartOffsetMax) {
+		this.satelliteStartOffsetMax = satelliteStartOffsetMax;
+	}
 
 	@Override
 	public Animation createPlanetLaunchAnimation(View view) {
@@ -61,16 +77,26 @@ public class DefaultAnimation2 extends AbstractAnimation {
 				itemModel.getOriginX() - itemModel.getStopX()
 						- itemModel.getAdjustX(), 0, itemModel.getOriginY()
 						- itemModel.getStopY() - itemModel.getAdjustX(), 0);
-		translateAnimation.setStartOffset(MyMathUtils.getRandom(0, 70));
+		int startOffset = MyMathUtils.getRandom(satelliteStartOffsetMin, satelliteStartOffsetMax);
+		translateAnimation.setStartOffset(startOffset);
 		translateAnimation.setDuration(400);
 		translateAnimation.setAnimationListener(new SatelliteLaunchListener(view));
 		translateAnimation.setInterpolator(new OvershootInterpolator(3F));
 		animationSet.addAnimation(translateAnimation);
 		
+		//透明动画
+		AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
+		alphaAnimation.setDuration(60);
+		alphaAnimation.setStartOffset(startOffset);
+		animationSet.addAnimation(alphaAnimation);
+		
 		view.startAnimation(animationSet);
 		return animationSet;
 	}
 
+	/**
+	 * 卫星收回动画
+	 */
 	@Override
 	public Animation createSatelliteDrawBackAnimation(View view) {
 		AnimationSet animationSet = new AnimationSet(false);
@@ -78,11 +104,18 @@ public class DefaultAnimation2 extends AbstractAnimation {
 		
 		//移动动画
 		TranslateAnimation translateAnimation = new TranslateAnimation(0, itemModel.getOriginX() - itemModel.getStopX() - itemModel.getAdjustX(), 0, itemModel.getOriginY() - itemModel.getStopY() - itemModel.getAdjustX());
-		translateAnimation.setStartOffset(200 + MyMathUtils.getRandom(0, 70));
+		int startOffset = MyMathUtils.getRandom(satelliteStartOffsetMin, satelliteStartOffsetMax);
+		translateAnimation.setStartOffset(200 + startOffset);
 		translateAnimation.setDuration(400);
 		translateAnimation.setAnimationListener(new SatelliteDrawBackListener(view));
 		translateAnimation.setInterpolator(new AnticipateInterpolator(3F));
 		animationSet.addAnimation(translateAnimation);
+		
+		//透明动画
+		AlphaAnimation alphaAnimation = new AlphaAnimation(1f, 0f);
+        alphaAnimation.setDuration(60);
+        alphaAnimation.setStartOffset(540 + startOffset);
+        animationSet.addAnimation(alphaAnimation);
 		
 		view.startAnimation(animationSet);
 		return animationSet;

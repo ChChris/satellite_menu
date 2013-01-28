@@ -70,8 +70,7 @@ public class DefaultAnimation extends AbstractAnimation {
 
 		// Í¸Ã÷¶¯»­
 		AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
-		long alphaDuration = 60;
-		alphaAnimation.setDuration(alphaDuration);
+		alphaAnimation.setDuration(60);
 		alphaAnimation.setStartOffset(0);
 		animationSet.addAnimation(alphaAnimation);
 

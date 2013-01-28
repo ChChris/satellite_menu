@@ -32,6 +32,7 @@ public class SettingPara {
 	private int planetX; //ÐÇÇò×ø±êX
 	private int planetY; //ÐÇÇò×ø±êY
 	private String planetPosition; //ÐÇÇòÎ»ÖÃ
+	private int customerRadiusAdjust;
 	
 	public SettingPara (int originAngle, int endAngle, int satelliteDistance, int planetImgResourceId, List<SatelliteItemModel> satelliteList) {
 		this.originAngle = originAngle;
@@ -133,6 +134,14 @@ public class SettingPara {
 
 	public void setPlanetPosition(String planetPosition) {
 		this.planetPosition = planetPosition;
+	}
+
+	public int getCustomerRadiusAdjust() {
+		return customerRadiusAdjust;
+	}
+
+	public void setCustomerRadiusAdjust(int customerRadiusAdjust) {
+		this.customerRadiusAdjust = customerRadiusAdjust;
 	}
 
 }

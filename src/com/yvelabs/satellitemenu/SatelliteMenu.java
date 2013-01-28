@@ -32,6 +32,7 @@ public class SatelliteMenu extends RelativeLayout {
 	private int originAngle; //ÆðÊ¼½Ç¶È
 	private int endAngle; //ÖÕÖ¹½Ç¶È
 	private int satelliteDistance; //ÎÀÐÇ¾àÀë
+	private int customerRadiusAdjust; //
 	
 	private ImageView planetMenu;
 	private AbstractAnimation menuAnimation;
@@ -230,6 +231,7 @@ public class SatelliteMenu extends RelativeLayout {
 		this.endAngle = MyMathUtils.getAngle(settingPara.getEndAngle());
 		this.originAngle = MyMathUtils.getAngle(settingPara.getOriginAngle());
 		this.satelliteDistance = settingPara.getSatelliteDistance();
+		this.customerRadiusAdjust = settingPara.getCustomerRadiusAdjust();
 		
 		
 		//×°ÔØ¶¯»­
@@ -257,7 +259,7 @@ public class SatelliteMenu extends RelativeLayout {
 		try {
 			//¼ÆËã°ë¾¶
 			int satelliteLenght = new ImageUtils().getLongestImage(getContext(), satelliteList) * 2;
-			int radius = satelliteDistance + satelliteLenght;
+			int radius = satelliteDistance + satelliteLenght + customerRadiusAdjust;
 			
 			if (settingPara.getPlanetPosition() != null && settingPara.getPlanetPosition().length() > 0) {
 				map = new MyMathUtils().getWidthHeightByPosition(settingPara.getPlanetPosition(), radius);

@@ -35,6 +35,7 @@ you can set the originAngle and endAngle to change position of the satellite.
 		satllites.add(new SatelliteItemModel(4, R.drawable.satellite_4));
 		satllites.add(new SatelliteItemModel(5, R.drawable.satellite_5));
 
+		//set originAngle, endAngle and distance
 		SettingPara para = new SettingPara(90, 270, 200, R.drawable.planet_menu, satllites);
 		
 		AbstractAnimation anim = new DefaultAnimation();
